@@ -1,4 +1,8 @@
 streamlit
 pandas
-plotly
-sqlite3
+numpy
+requests
+pygments
+markdown-it-py
+mdurl
+rich
