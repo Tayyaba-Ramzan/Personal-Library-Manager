@@ -31,6 +31,7 @@ def add_book(title, author, genre, year):
     c.execute("INSERT INTO books (title, author, genre, year) VALUES (?, ?, ?, ?)", (title, author, genre, year))
     conn.commit()
     conn.close()
+    st.cache_data.clear()  # Clear cache to refresh data
 
 @st.cache_data
 def get_books():
@@ -47,6 +48,7 @@ def delete_book(book_id):
     c.execute("DELETE FROM books WHERE id = ?", (book_id,))
     conn.commit()
     conn.close()
+    st.cache_data.clear()  # Clear cache to refresh data
 
 def update_book(book_id, title, author, genre, year):
     conn = sqlite3.connect("library.db")
@@ -54,6 +56,7 @@ def update_book(book_id, title, author, genre, year):
     c.execute("UPDATE books SET title = ?, author = ?, genre = ?, year = ? WHERE id = ?", (title, author, genre, year, book_id))
     conn.commit()
     conn.close()
+    st.cache_data.clear()  # Clear cache to refresh data
 
 # Define genre options globally
 genre_options = ["Fiction", "Non-Fiction", "Science Fiction", "Biography", "Self-Help", "Mystery", "Romance", "Fantasy", "Horror", "Thriller", "History", "Other"]
@@ -104,10 +107,10 @@ elif choice == "📖 View Books":
     if books:
         df = pd.DataFrame(books, columns=["ID", "Title", "Author", "Genre", "Year"])
         search_query = st.text_input("🔍 Search by title or author", placeholder="Type to search...")
-        
+
         if search_query:
             df = df[df["Title"].str.contains(search_query, case=False, na=False) | df["Author"].str.contains(search_query, case=False, na=False)]
-        
+
         st.dataframe(df, use_container_width=True)
     else:
         st.warning("📭 No books found in the library.")
